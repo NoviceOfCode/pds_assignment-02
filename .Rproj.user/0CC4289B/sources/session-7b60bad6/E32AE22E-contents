@@ -34,3 +34,7 @@ adjusted_power <- adjusted_engine %>%
   mutate(Power = gsub(" bhp", "", Power)) # Removing bhp
 final_adjusted <- adjusted_power %>%
   mutate(New_Price = gsub(" Lakh", "", New_Price)) #Removing lakh
+
+#Question C
+fuel_type_one_hot <- train %>%
+  get_dummies(Fuel_Type)

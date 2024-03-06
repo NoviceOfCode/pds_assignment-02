@@ -1,7 +1,7 @@
 install.packages("dplyr")
 install.package("stringr")
-library(dplyr)
 install.package("readr")
+library(dplyr)
 library(readr)
 train <- read_csv("train.csv")
 

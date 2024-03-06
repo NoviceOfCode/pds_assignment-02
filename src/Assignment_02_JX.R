@@ -3,8 +3,9 @@ install.package("stringr")
 library(dplyr)
 install.package("readr")
 library(readr)
-train <- read_csv("train.csv")
+train <- read_csv("data_raw/train.csv")
 
+#Question a
 #Finding counts for missing values
 column_na_values_count_df <- data.frame(colnames(train), colSums(is.na(train)))
 
@@ -51,12 +52,33 @@ final_fuel_type_one_hot <- fuel_type_one_hot %>%
 # One Hot Recording for Transmission
 unique_transmission <- unique(train$Transmission)
 transmission_one_hot_encoded <-final_fuel_type_one_hot %>%
-  mutate(Manual = ifelse(Transmission == "Petrol", 1, 0),
-                Diesel = ifelse(Transmission == "Diesel", 1, 0))
+  mutate(Manual = ifelse(Transmission == "Manual", 1, 0),
+         Automatic = ifelse(Transmission == "Automatic", 1, 0))
 final_transmission <- transmission_one_hot_encoded %>%
   select(-Transmission)
+
 
 #Question D adding a feature
 current_year_car_train <- train %>%
   mutate( Car_Age = 2024 -Year)
 
+#Question E
+library(tidyverse)
+
+car_location_seats <- train %>%
+  drop_na(Seats) %>%
+  group_by(Location) %>%
+  summarise('Average Number of Seats' = mean(Seats)) %>%
+  view
+car_location_price <- train %>%
+  drop_na(Price) %>%
+  group_by(Location) %>%
+  arrange(desc(Price)) %>%
+  rename(Current_Market_Price = Price) %>%
+  select(Location, Current_Market_Price) %>%
+  view
+bad_estimated_km_per_year <- train %>%
+  mutate(Estimated_Mileage_Per_Year = (2024 - Year) / Kilometers_Driven) %>%
+  group_by(Name) %>%
+  select(Name, Estimated_Mileage_Per_Year) %>%
+  view
